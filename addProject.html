@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Project</title>
+    <script
+            src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+            crossorigin="anonymous">
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#add_project_but").click(function () {
+                project_name = $("#project_name_input").val();
+                project_budget = $("#project_budget_input").val();
+                project_startdate = $("#project_startdate_input").val();
+                project_status = $('input[name="status"]:checked').val();
+                project_note = $("#project_note_input").val();
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: 'https://morganoffice.herokuapp.com/api/projects/',
+                    data: {
+                        name : project_name,
+                        budget: project_budget,
+                        start_date: project_startdate,
+                        status: project_status,
+                        notes: project_note
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        alert("record edit");
+                    },
+                    error: function (err) {
+                        console.log(err.responseJSON);
+                        $("#project_name_err").text(err.responseJSON.name);
+                        $("#project_budget_err").text(err.responseJSON.budget);
+                        $("#project_startdate_err").text(err.responseJSON.start_date);
+                        $("#project_status_err").text(err.responseJSON.status);
+                        $("#project_note_err").text(err.responseJSON.notes);
+
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<form onclick="return false">
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td><input id="project_name_input" type="text">
+                <p id="project_name_err"></p>
+            </td>
+        </tr>
+        <tr>
+            <td>Budget:</td>
+            <td><input id="project_budget_input" type="text">
+                <p id="project_budget_err"></p>
+            </td>
+        </tr>
+        <tr>
+            <td>Start Date:</td>
+            <td><input id="project_startdate_input" type="date">
+                <p id="project_startdate_err"></p>
+            </td>
+        </tr>
+        <tr>
+            <td>Status:</td>
+            <td>
+                <input type="radio" name = "status" value="Complete">Complete
+                <input type="radio" name = "status" value="Pending">Pending
+                <input type="radio" name = "status" value="Approved">Approved
+                <p id="project_status_err"></p>
+            </td>
+        </tr>
+        <tr>
+            <td>Note:</td>
+            <td><textarea id="project_note_input" ></textarea>
+                <p id="project_note_err"></p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><button id="add_project_but">Add Project</button></td>
+
+            </td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>
