@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get Single Department</title>
+    <script
+            src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+            crossorigin="anonymous">
+    </script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: 'GET',
+                dataType: 'JSON',
+                url: 'https://morganoffice.herokuapp.com/api/departments/',
+                success: function (data) {
+                    console.log(data);
+                    i = 0;
+                    while (i < data.length){
+                        department = data[i];
+                        $("#department_selection").append("<option value='"+department.department_id+"'>" +
+                            department.name +
+                            "</option>");
+                        i++;
+                    }
+
+                    $("#department_selection").change(function () {
+                        department_id = $("#department_selection").val();
+                        getSingleDepartment(department_id);
+                    });
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+
+
+            function getSingleDepartment(department_id){
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'JSON',
+                    url: 'https://morganoffice.herokuapp.com/api/departments/'+department_id+'/',
+                    success: function (data) {
+                        console.log(data);
+                        department = data;
+                        $("#department_id_text").text(department.department_id);
+                        $("#department_name_text").text(department.name);
+                        $("#department_location_text").text(department.location);
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+
+        });
+    </script>
+</head>
+<body>
+<select id="department_selection">
+    <option>Please select one department</option>
+</select>
+
+<div>
+    <p>ID: </p><p id="department_id_text"></p>
+    <p>Name: </p><p id="department_name_text"></p>
+    <p>Location: </p><p id="department_location_text"></p>
+</div>
+</body>
+</html>
